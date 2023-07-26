@@ -150,7 +150,6 @@
 // Ignored clippy_pedantic lints
 #![allow(
     clippy::cloned_instead_of_copied,
-    clippy::doc_link_with_quotes, // https://github.com/rust-lang/rust-clippy/issues/8961
     clippy::empty_line_after_outer_attr,
     clippy::manual_assert,
     clippy::missing_docs_in_private_items,
@@ -159,9 +158,8 @@
     clippy::must_use_candidate,
     clippy::redundant_field_names,
     clippy::too_many_lines,
-    clippy::type_repetition_in_bounds, // https://github.com/rust-lang/rust-clippy/issues/8772
     clippy::use_debug,
-    clippy::use_self,
+    clippy::use_self
 )]
 
 mod assert;
