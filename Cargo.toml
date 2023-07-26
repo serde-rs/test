@@ -9,7 +9,6 @@ documentation = "https://docs.rs/serde_test"
 homepage = "https://serde.rs"
 keywords = ["serde", "serialization", "testing", "dev-dependencies"]
 license = "MIT OR Apache-2.0"
-readme = "crates-io.md"
 repository = "https://github.com/serde-rs/serde"
 rust-version = "1.19"
 
