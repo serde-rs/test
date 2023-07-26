@@ -5,6 +5,7 @@ use serde::de::{
     self, Deserialize, DeserializeSeed, EnumAccess, IntoDeserializer, MapAccess, SeqAccess,
     VariantAccess, Visitor,
 };
+use serde::forward_to_deserialize_any;
 
 #[derive(Debug)]
 pub struct Deserializer<'de> {
