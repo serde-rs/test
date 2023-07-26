@@ -170,18 +170,16 @@
 
 extern crate serde;
 
+mod assert;
+mod configure;
 mod de;
 mod error;
 mod ser;
-
-mod assert;
-mod configure;
 mod token;
 
 pub use crate::assert::{
     assert_de_tokens, assert_de_tokens_error, assert_ser_tokens, assert_ser_tokens_error,
     assert_tokens,
 };
-pub use crate::token::Token;
-
 pub use crate::configure::{Compact, Configure, Readable};
+pub use crate::token::Token;
