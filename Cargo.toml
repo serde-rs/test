@@ -6,10 +6,9 @@ build = "build.rs"
 categories = ["development-tools::testing"]
 description = "Token De/Serializer for testing De/Serialize implementations"
 documentation = "https://docs.rs/serde_test"
-homepage = "https://serde.rs"
 keywords = ["serde", "serialization", "testing", "dev-dependencies"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/serde-rs/serde"
+repository = "https://github.com/serde-rs/test"
 rust-version = "1.19"
 
 [dependencies]
