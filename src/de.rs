@@ -4,8 +4,8 @@ use serde::de::{
     VariantAccess, Visitor,
 };
 
-use error::Error;
-use token::Token;
+use crate::error::Error;
+use crate::token::Token;
 
 #[derive(Debug)]
 pub struct Deserializer<'de> {
