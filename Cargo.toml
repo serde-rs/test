@@ -12,7 +12,7 @@ repository = "https://github.com/serde-rs/test"
 rust-version = "1.56"
 
 [dependencies]
-serde = "1.0.60"
+serde = "1.0.69"
 
 [dev-dependencies]
 serde = { version = "1", features = ["rc"] }
