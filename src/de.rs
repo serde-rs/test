@@ -39,7 +39,7 @@ fn end_of_tokens() -> Error {
 
 impl<'de> Deserializer<'de> {
     pub fn new(tokens: &'de [Token]) -> Self {
-        Deserializer { tokens: tokens }
+        Deserializer { tokens }
     }
 
     fn peek_token_opt(&self) -> Option<Token> {
@@ -79,11 +79,7 @@ impl<'de> Deserializer<'de> {
     where
         V: Visitor<'de>,
     {
-        let value = visitor.visit_seq(DeserializerSeqVisitor {
-            de: self,
-            len: len,
-            end: end,
-        })?;
+        let value = visitor.visit_seq(DeserializerSeqVisitor { de: self, len, end })?;
         assert_next_token(self, end)?;
         Ok(value)
     }
@@ -97,11 +93,7 @@ impl<'de> Deserializer<'de> {
     where
         V: Visitor<'de>,
     {
-        let value = visitor.visit_map(DeserializerMapVisitor {
-            de: self,
-            len: len,
-            end: end,
-        })?;
+        let value = visitor.visit_map(DeserializerMapVisitor { de: self, len, end })?;
         assert_next_token(self, end)?;
         Ok(value)
     }
@@ -276,7 +268,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer<'de> {
     {
         match self.peek_token()? {
             Token::UnitStruct { .. } => {
-                assert_next_token(self, Token::UnitStruct { name: name })?;
+                assert_next_token(self, Token::UnitStruct { name })?;
                 visitor.visit_unit()
             }
             _ => self.deserialize_any(visitor),
@@ -293,7 +285,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer<'de> {
     {
         match self.peek_token()? {
             Token::NewtypeStruct { .. } => {
-                assert_next_token(self, Token::NewtypeStruct { name: name })?;
+                assert_next_token(self, Token::NewtypeStruct { name })?;
                 visitor.visit_newtype_struct(self)
             }
             _ => self.deserialize_any(visitor),
@@ -340,7 +332,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer<'de> {
                 visitor.visit_unit()
             }
             Token::UnitStruct { .. } => {
-                assert_next_token(self, Token::UnitStruct { name: name })?;
+                assert_next_token(self, Token::UnitStruct { name })?;
                 visitor.visit_unit()
             }
             Token::Seq { .. } => {
@@ -352,7 +344,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer<'de> {
                 self.visit_seq(Some(len), Token::TupleEnd, visitor)
             }
             Token::TupleStruct { len: n, .. } => {
-                assert_next_token(self, Token::TupleStruct { name: name, len: n })?;
+                assert_next_token(self, Token::TupleStruct { name, len: n })?;
                 self.visit_seq(Some(len), Token::TupleStructEnd, visitor)
             }
             _ => self.deserialize_any(visitor),
@@ -370,7 +362,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer<'de> {
     {
         match self.peek_token()? {
             Token::Struct { len: n, .. } => {
-                assert_next_token(self, Token::Struct { name: name, len: n })?;
+                assert_next_token(self, Token::Struct { name, len: n })?;
                 self.visit_map(Some(fields.len()), Token::StructEnd, visitor)
             }
             Token::Map { .. } => {
@@ -590,9 +582,9 @@ enum EnumFormat {
 impl<'a, 'de> EnumMapVisitor<'a, 'de> {
     fn new(de: &'a mut Deserializer<'de>, variant: Token, format: EnumFormat) -> Self {
         EnumMapVisitor {
-            de: de,
+            de,
             variant: Some(variant),
-            format: format,
+            format,
         }
     }
 }

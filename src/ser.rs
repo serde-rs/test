@@ -12,7 +12,7 @@ pub struct Serializer<'a> {
 impl<'a> Serializer<'a> {
     /// Creates the serializer.
     pub fn new(tokens: &'a [Token]) -> Self {
-        Serializer { tokens: tokens }
+        Serializer { tokens }
     }
 
     /// Pulls the next token off of the serializer, ignoring it.
@@ -178,7 +178,7 @@ impl<'s, 'a> ser::Serializer for &'s mut Serializer<'a> {
         _variant_index: u32,
         variant: &'static str,
     ) -> Result<(), Error> {
-        if self.tokens.first() == Some(&Token::Enum { name: name }) {
+        if self.tokens.first() == Some(&Token::Enum { name }) {
             self.next_token();
             assert_next_token!(self, Str(variant));
             assert_next_token!(self, Unit);
@@ -206,7 +206,7 @@ impl<'s, 'a> ser::Serializer for &'s mut Serializer<'a> {
     where
         T: Serialize,
     {
-        if self.tokens.first() == Some(&Token::Enum { name: name }) {
+        if self.tokens.first() == Some(&Token::Enum { name }) {
             self.next_token();
             assert_next_token!(self, Str(variant));
         } else {
@@ -250,7 +250,7 @@ impl<'s, 'a> ser::Serializer for &'s mut Serializer<'a> {
         variant: &'static str,
         len: usize,
     ) -> Result<Self::SerializeTupleVariant, Error> {
-        if self.tokens.first() == Some(&Token::Enum { name: name }) {
+        if self.tokens.first() == Some(&Token::Enum { name }) {
             self.next_token();
             assert_next_token!(self, Str(variant));
             let len = Some(len);
@@ -285,7 +285,7 @@ impl<'s, 'a> ser::Serializer for &'s mut Serializer<'a> {
         variant: &'static str,
         len: usize,
     ) -> Result<Self::SerializeStructVariant, Error> {
-        if self.tokens.first() == Some(&Token::Enum { name: name }) {
+        if self.tokens.first() == Some(&Token::Enum { name }) {
             self.next_token();
             assert_next_token!(self, Str(variant));
             let len = Some(len);

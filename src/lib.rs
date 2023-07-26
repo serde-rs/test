@@ -152,7 +152,6 @@
     clippy::manual_assert,
     clippy::missing_panics_doc,
     clippy::module_name_repetitions,
-    clippy::redundant_field_names,
     clippy::too_many_lines
 )]
 
