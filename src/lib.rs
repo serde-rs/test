@@ -149,7 +149,6 @@
 #![allow(clippy::float_cmp, clippy::needless_doctest_main)]
 // Ignored clippy_pedantic lints
 #![allow(
-    clippy::cloned_instead_of_copied,
     clippy::manual_assert,
     clippy::missing_panics_doc,
     clippy::module_name_repetitions,

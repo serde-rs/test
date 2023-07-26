@@ -43,7 +43,7 @@ impl<'de> Deserializer<'de> {
     }
 
     fn peek_token_opt(&self) -> Option<Token> {
-        self.tokens.first().cloned()
+        self.tokens.first().copied()
     }
 
     fn peek_token(&self) -> Result<Token, Error> {
