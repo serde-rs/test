@@ -1,7 +1,6 @@
-use serde::{ser, Serialize};
-
 use crate::error::Error;
 use crate::token::Token;
+use serde::ser::{self, Serialize};
 
 /// A `Serializer` that ensures that a value serializes to a given list of
 /// tokens.

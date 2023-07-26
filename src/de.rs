@@ -1,11 +1,10 @@
+use crate::error::Error;
+use crate::token::Token;
 use serde::de::value::{MapAccessDeserializer, SeqAccessDeserializer};
 use serde::de::{
     self, Deserialize, DeserializeSeed, EnumAccess, IntoDeserializer, MapAccess, SeqAccess,
     VariantAccess, Visitor,
 };
-
-use crate::error::Error;
-use crate::token::Token;
 
 #[derive(Debug)]
 pub struct Deserializer<'de> {

@@ -1,10 +1,12 @@
-use std::fmt;
-
-use serde::ser::{
-    SerializeMap, SerializeSeq, SerializeStruct, SerializeStructVariant, SerializeTuple,
-    SerializeTupleStruct, SerializeTupleVariant,
+use serde::de::{
+    Deserialize, DeserializeSeed, Deserializer, EnumAccess, Error, MapAccess, SeqAccess,
+    VariantAccess, Visitor,
 };
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::ser::{
+    Serialize, SerializeMap, SerializeSeq, SerializeStruct, SerializeStructVariant, SerializeTuple,
+    SerializeTupleStruct, SerializeTupleVariant, Serializer,
+};
+use std::fmt;
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Readable<T: ?Sized>(T);
@@ -466,8 +468,6 @@ macro_rules! impl_serializer {
 
 impl_serializer!(Readable, true);
 impl_serializer!(Compact, false);
-
-use serde::de::{DeserializeSeed, EnumAccess, Error, MapAccess, SeqAccess, VariantAccess, Visitor};
 
 macro_rules! forward_deserialize_methods {
     ( $wrapper : ident ( $( $name: ident ),* ) ) => {

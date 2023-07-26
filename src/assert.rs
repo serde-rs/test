@@ -1,9 +1,7 @@
-use serde::{Deserialize, Serialize};
-
 use crate::de::Deserializer;
 use crate::ser::Serializer;
 use crate::token::Token;
-
+use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
 /// Runs both `assert_ser_tokens` and `assert_de_tokens`.
