@@ -14,11 +14,11 @@ repository = "https://github.com/serde-rs/serde"
 rust-version = "1.19"
 
 [dependencies]
-serde = { version = "1.0.60", path = "../serde" }
+serde = "1.0.60"
 
 [dev-dependencies]
-serde = { version = "1", path = "../serde", features = ["rc"] }
-serde_derive = { version = "1", path = "../serde_derive" }
+serde = { version = "1", features = ["rc"] }
+serde_derive = "1"
 
 [lib]
 doc-scrape-examples = false
