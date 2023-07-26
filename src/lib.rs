@@ -168,8 +168,6 @@
     )
 )]
 
-extern crate serde;
-
 mod assert;
 mod configure;
 mod de;
