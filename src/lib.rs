@@ -150,16 +150,11 @@
 // Ignored clippy_pedantic lints
 #![allow(
     clippy::cloned_instead_of_copied,
-    clippy::empty_line_after_outer_attr,
     clippy::manual_assert,
-    clippy::missing_docs_in_private_items,
     clippy::missing_panics_doc,
     clippy::module_name_repetitions,
-    clippy::must_use_candidate,
     clippy::redundant_field_names,
-    clippy::too_many_lines,
-    clippy::use_debug,
-    clippy::use_self
+    clippy::too_many_lines
 )]
 
 mod assert;
