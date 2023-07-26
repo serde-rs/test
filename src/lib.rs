@@ -145,27 +145,23 @@
 //! ```
 
 #![doc(html_root_url = "https://docs.rs/serde_test/1.0.175")]
-#![cfg_attr(feature = "cargo-clippy", allow(renamed_and_removed_lints))]
 // Ignored clippy lints
-#![cfg_attr(feature = "cargo-clippy", allow(float_cmp, needless_doctest_main))]
+#![allow(clippy::float_cmp, clippy::needless_doctest_main)]
 // Ignored clippy_pedantic lints
-#![cfg_attr(
-    feature = "cargo-clippy",
-    allow(
-        cloned_instead_of_copied,
-        doc_link_with_quotes, // https://github.com/rust-lang/rust-clippy/issues/8961
-        empty_line_after_outer_attr,
-        manual_assert,
-        missing_docs_in_private_items,
-        missing_panics_doc,
-        module_name_repetitions,
-        must_use_candidate,
-        redundant_field_names,
-        too_many_lines,
-        type_repetition_in_bounds, // https://github.com/rust-lang/rust-clippy/issues/8772
-        use_debug,
-        use_self
-    )
+#![allow(
+    clippy::cloned_instead_of_copied,
+    clippy::doc_link_with_quotes, // https://github.com/rust-lang/rust-clippy/issues/8961
+    clippy::empty_line_after_outer_attr,
+    clippy::manual_assert,
+    clippy::missing_docs_in_private_items,
+    clippy::missing_panics_doc,
+    clippy::module_name_repetitions,
+    clippy::must_use_candidate,
+    clippy::redundant_field_names,
+    clippy::too_many_lines,
+    clippy::type_repetition_in_bounds, // https://github.com/rust-lang/rust-clippy/issues/8772
+    clippy::use_debug,
+    clippy::use_self,
 )]
 
 mod assert;
