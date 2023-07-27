@@ -128,7 +128,11 @@ where
 {
     let mut ser = Serializer::new(tokens);
     match value.serialize(&mut ser) {
-        Ok(_) => panic!("value serialized successfully"),
+        Ok(_) => assert_eq!(
+            None,
+            Some(error),
+            "value serialized successfully, but error expected (right)"
+        ),
         Err(e) => assert_eq!(e, *error),
     }
 
