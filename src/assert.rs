@@ -237,3 +237,50 @@ where
         panic!("{} remaining tokens", de.remaining());
     }
 }
+
+/// Asserts that the given `tokens` yield `error` when deserializing.
+///
+/// The same, as [`assert_de_tokens_error`], but produces an error message which
+/// contains result of deserialization in case if tokens deserialized to something.
+///
+/// ```
+/// # use serde_derive::{Deserialize, Serialize};
+/// # use serde_test::{assert_de_tokens_error2, Token};
+/// #
+/// #[derive(Serialize, Deserialize, PartialEq, Debug)]
+/// #[serde(deny_unknown_fields)]
+/// struct S {
+///     a: u8,
+///     b: u8,
+/// }
+///
+/// assert_de_tokens_error2::<S>(
+///     &[
+///         Token::Struct { name: "S", len: 2 },
+///         Token::Str("x"),
+///     ],
+///     "unknown field `x`, expected `a` or `b`",
+/// );
+/// ```
+#[cfg_attr(not(no_track_caller), track_caller)]
+pub fn assert_de_tokens_error2<'de, T>(tokens: &'de [Token], error: &str)
+where
+    T: Deserialize<'de> + Debug,
+{
+    let mut de = Deserializer::new(tokens);
+    match T::deserialize(&mut de) {
+        Ok(x) => assert_eq!(
+            error,
+            format!("{:?}", x),
+            "expected error (left) but tokens deserialized successfully (right)"
+        ),
+        Err(e) => assert_eq!(e, *error),
+    }
+
+    // There may be one token left if a peek caused the error
+    de.next_token_opt();
+
+    if de.remaining() > 0 {
+        panic!("{} remaining tokens", de.remaining());
+    }
+}
