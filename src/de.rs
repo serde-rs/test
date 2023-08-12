@@ -1,6 +1,9 @@
 use crate::error::Error;
 use crate::token::Token;
-use serde::de::value::{MapAccessDeserializer, SeqAccessDeserializer};
+use serde::de::value::{
+    BorrowedBytesDeserializer, BorrowedStrDeserializer, MapAccessDeserializer,
+    SeqAccessDeserializer,
+};
 use serde::de::{
     self, Deserialize, DeserializeSeed, EnumAccess, IntoDeserializer, MapAccess, SeqAccess,
     VariantAccess, Visitor,
@@ -598,10 +601,28 @@ impl<'de, 'a> MapAccess<'de> for EnumMapVisitor<'a, 'de> {
     {
         match self.variant.take() {
             Some(Token::Str(variant)) => seed.deserialize(variant.into_deserializer()).map(Some),
+            Some(Token::BorrowedStr(variant)) => seed
+                .deserialize(BorrowedStrDeserializer::new(variant))
+                .map(Some),
+            Some(Token::String(variant)) => seed
+                .deserialize(StringDeserializer { value: variant })
+                .map(Some),
+
             Some(Token::Bytes(variant)) => seed
+                .deserialize(BorrowedBytesDeserializer::new(variant))
+                .map(Some),
+            Some(Token::BorrowedBytes(variant)) => seed
                 .deserialize(BytesDeserializer { value: variant })
                 .map(Some),
+            Some(Token::ByteBuf(variant)) => seed
+                .deserialize(ByteBufDeserializer { value: variant })
+                .map(Some),
+
+            Some(Token::U8(variant)) => seed.deserialize(variant.into_deserializer()).map(Some),
+            Some(Token::U16(variant)) => seed.deserialize(variant.into_deserializer()).map(Some),
             Some(Token::U32(variant)) => seed.deserialize(variant.into_deserializer()).map(Some),
+            Some(Token::U64(variant)) => seed.deserialize(variant.into_deserializer()).map(Some),
+
             Some(other) => Err(unexpected(other)),
             None => Ok(None),
         }
@@ -641,6 +662,7 @@ impl<'de, 'a> MapAccess<'de> for EnumMapVisitor<'a, 'de> {
     }
 }
 
+/// `BytesDeserializer` in serde available only since v1.0.121
 struct BytesDeserializer {
     value: &'static [u8],
 }
@@ -653,6 +675,50 @@ impl<'de> de::Deserializer<'de> for BytesDeserializer {
         V: de::Visitor<'de>,
     {
         visitor.visit_bytes(self.value)
+    }
+
+    forward_to_deserialize_any! {
+        bool i8 i16 i32 i64 i128 u8 u16 u32 u64 u128 f32 f64 char str string
+        bytes byte_buf option unit unit_struct newtype_struct seq tuple
+        tuple_struct map struct enum identifier ignored_any
+    }
+}
+
+/// `StringDeserializer` in serde available only since v1.0.139 and makes unwanted
+/// conversions in `visit_enum`
+struct StringDeserializer {
+    value: &'static str,
+}
+
+impl<'de> de::Deserializer<'de> for StringDeserializer {
+    type Error = Error;
+
+    fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Self::Error>
+    where
+        V: de::Visitor<'de>,
+    {
+        visitor.visit_string(self.value.to_string())
+    }
+
+    forward_to_deserialize_any! {
+        bool i8 i16 i32 i64 i128 u8 u16 u32 u64 u128 f32 f64 char str string
+        bytes byte_buf option unit unit_struct newtype_struct seq tuple
+        tuple_struct map struct enum identifier ignored_any
+    }
+}
+
+struct ByteBufDeserializer {
+    value: &'static [u8],
+}
+
+impl<'de> de::Deserializer<'de> for ByteBufDeserializer {
+    type Error = Error;
+
+    fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Self::Error>
+    where
+        V: de::Visitor<'de>,
+    {
+        visitor.visit_byte_buf(self.value.to_vec())
     }
 
     forward_to_deserialize_any! {
