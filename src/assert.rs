@@ -70,7 +70,7 @@ where
 {
     let mut ser = Serializer::new(tokens);
     match value.serialize(&mut ser) {
-        Ok(_) => {}
+        Ok(()) => {}
         Err(err) => panic!("value failed to serialize: {}", err),
     }
 
@@ -128,7 +128,7 @@ where
 {
     let mut ser = Serializer::new(tokens);
     match value.serialize(&mut ser) {
-        Ok(_) => panic!("value serialized successfully"),
+        Ok(()) => panic!("value serialized successfully"),
         Err(e) => assert_eq!(e, *error),
     }
 
