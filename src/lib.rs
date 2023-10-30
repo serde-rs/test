@@ -157,9 +157,10 @@
 
 mod assert;
 mod configure;
-mod de;
+pub mod de;
+pub mod ser;
+
 mod error;
-mod ser;
 mod token;
 
 pub use crate::assert::{
