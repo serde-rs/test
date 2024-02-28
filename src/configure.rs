@@ -86,11 +86,11 @@ pub trait Configure {
     }
 }
 
-impl<T: ?Sized> Configure for T {}
+impl<T> Configure for T where T: ?Sized {}
 
-impl<T: ?Sized> Serialize for Readable<T>
+impl<T> Serialize for Readable<T>
 where
-    T: Serialize,
+    T: ?Sized + Serialize,
 {
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -100,9 +100,9 @@ where
         self.0.serialize(Readable(serializer))
     }
 }
-impl<T: ?Sized> Serialize for Compact<T>
+impl<T> Serialize for Compact<T>
 where
-    T: Serialize,
+    T: ?Sized + Serialize,
 {
     #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -231,18 +231,18 @@ macro_rules! impl_serializer {
                 self.0.serialize_unit_variant(name, variant_index, variant)
             }
 
-            fn serialize_newtype_struct<T: ?Sized>(
+            fn serialize_newtype_struct<T>(
                 self,
                 name: &'static str,
                 value: &T,
             ) -> Result<S::Ok, S::Error>
             where
-                T: Serialize,
+                T: ?Sized + Serialize,
             {
                 self.0.serialize_newtype_struct(name, &$wrapper(value))
             }
 
-            fn serialize_newtype_variant<T: ?Sized>(
+            fn serialize_newtype_variant<T>(
                 self,
                 name: &'static str,
                 variant_index: u32,
@@ -250,7 +250,7 @@ macro_rules! impl_serializer {
                 value: &T,
             ) -> Result<S::Ok, S::Error>
             where
-                T: Serialize,
+                T: ?Sized + Serialize,
             {
                 self.0
                     .serialize_newtype_variant(name, variant_index, variant, &$wrapper(value))
@@ -260,9 +260,9 @@ macro_rules! impl_serializer {
                 self.0.serialize_none()
             }
 
-            fn serialize_some<T: ?Sized>(self, value: &T) -> Result<S::Ok, Self::Error>
+            fn serialize_some<T>(self, value: &T) -> Result<S::Ok, Self::Error>
             where
-                T: Serialize,
+                T: ?Sized + Serialize,
             {
                 self.0.serialize_some(&$wrapper(value))
             }
@@ -326,9 +326,9 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
-            fn serialize_element<T: ?Sized>(&mut self, value: &T) -> Result<(), S::Error>
+            fn serialize_element<T>(&mut self, value: &T) -> Result<(), S::Error>
             where
-                T: Serialize,
+                T: ?Sized + Serialize,
             {
                 self.0.serialize_element(&$wrapper(value))
             }
@@ -343,9 +343,9 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
-            fn serialize_element<T: ?Sized>(&mut self, value: &T) -> Result<(), S::Error>
+            fn serialize_element<T>(&mut self, value: &T) -> Result<(), S::Error>
             where
-                T: Serialize,
+                T: ?Sized + Serialize,
             {
                 self.0.serialize_element(&$wrapper(value))
             }
@@ -360,9 +360,9 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
-            fn serialize_field<T: ?Sized>(&mut self, value: &T) -> Result<(), S::Error>
+            fn serialize_field<T>(&mut self, value: &T) -> Result<(), S::Error>
             where
-                T: Serialize,
+                T: ?Sized + Serialize,
             {
                 self.0.serialize_field(&$wrapper(value))
             }
@@ -377,9 +377,9 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
-            fn serialize_field<T: ?Sized>(&mut self, value: &T) -> Result<(), S::Error>
+            fn serialize_field<T>(&mut self, value: &T) -> Result<(), S::Error>
             where
-                T: Serialize,
+                T: ?Sized + Serialize,
             {
                 self.0.serialize_field(&$wrapper(value))
             }
@@ -394,26 +394,22 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
-            fn serialize_key<T: ?Sized>(&mut self, key: &T) -> Result<(), S::Error>
+            fn serialize_key<T>(&mut self, key: &T) -> Result<(), S::Error>
             where
-                T: Serialize,
+                T: ?Sized + Serialize,
             {
                 self.0.serialize_key(&$wrapper(key))
             }
-            fn serialize_value<T: ?Sized>(&mut self, value: &T) -> Result<(), S::Error>
+            fn serialize_value<T>(&mut self, value: &T) -> Result<(), S::Error>
             where
-                T: Serialize,
+                T: ?Sized + Serialize,
             {
                 self.0.serialize_value(&$wrapper(value))
             }
-            fn serialize_entry<K: ?Sized, V: ?Sized>(
-                &mut self,
-                key: &K,
-                value: &V,
-            ) -> Result<(), S::Error>
+            fn serialize_entry<K, V>(&mut self, key: &K, value: &V) -> Result<(), S::Error>
             where
-                K: Serialize,
-                V: Serialize,
+                K: ?Sized + Serialize,
+                V: ?Sized + Serialize,
             {
                 self.0.serialize_entry(key, &$wrapper(value))
             }
@@ -428,13 +424,9 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
-            fn serialize_field<T: ?Sized>(
-                &mut self,
-                name: &'static str,
-                field: &T,
-            ) -> Result<(), S::Error>
+            fn serialize_field<T>(&mut self, name: &'static str, field: &T) -> Result<(), S::Error>
             where
-                T: Serialize,
+                T: ?Sized + Serialize,
             {
                 self.0.serialize_field(name, &$wrapper(field))
             }
@@ -449,13 +441,9 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
-            fn serialize_field<T: ?Sized>(
-                &mut self,
-                name: &'static str,
-                field: &T,
-            ) -> Result<(), S::Error>
+            fn serialize_field<T>(&mut self, name: &'static str, field: &T) -> Result<(), S::Error>
             where
-                T: Serialize,
+                T: ?Sized + Serialize,
             {
                 self.0.serialize_field(name, &$wrapper(field))
             }

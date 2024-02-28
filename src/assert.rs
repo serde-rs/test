@@ -64,9 +64,9 @@ where
 /// );
 /// ```
 #[cfg_attr(not(no_track_caller), track_caller)]
-pub fn assert_ser_tokens<T: ?Sized>(value: &T, tokens: &[Token])
+pub fn assert_ser_tokens<T>(value: &T, tokens: &[Token])
 where
-    T: Serialize,
+    T: ?Sized + Serialize,
 {
     let mut ser = Serializer::new(tokens);
     match value.serialize(&mut ser) {
@@ -122,9 +122,9 @@ where
 /// }
 /// ```
 #[cfg_attr(not(no_track_caller), track_caller)]
-pub fn assert_ser_tokens_error<T: ?Sized>(value: &T, tokens: &[Token], error: &str)
+pub fn assert_ser_tokens_error<T>(value: &T, tokens: &[Token], error: &str)
 where
-    T: Serialize,
+    T: ?Sized + Serialize,
 {
     let mut ser = Serializer::new(tokens);
     match value.serialize(&mut ser) {
