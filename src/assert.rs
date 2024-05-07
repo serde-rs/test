@@ -29,7 +29,7 @@ use std::fmt::Debug;
 ///     ],
 /// );
 /// ```
-#[cfg_attr(not(no_track_caller), track_caller)]
+#[track_caller]
 pub fn assert_tokens<'de, T>(value: &T, tokens: &'de [Token])
 where
     T: Serialize + Deserialize<'de> + PartialEq + Debug,
@@ -63,7 +63,7 @@ where
 ///     ],
 /// );
 /// ```
-#[cfg_attr(not(no_track_caller), track_caller)]
+#[track_caller]
 pub fn assert_ser_tokens<T>(value: &T, tokens: &[Token])
 where
     T: ?Sized + Serialize,
@@ -121,7 +121,7 @@ where
 ///     assert_ser_tokens_error(&example, expected, error);
 /// }
 /// ```
-#[cfg_attr(not(no_track_caller), track_caller)]
+#[track_caller]
 pub fn assert_ser_tokens_error<T>(value: &T, tokens: &[Token], error: &str)
 where
     T: ?Sized + Serialize,
@@ -162,7 +162,7 @@ where
 ///     ],
 /// );
 /// ```
-#[cfg_attr(not(no_track_caller), track_caller)]
+#[track_caller]
 pub fn assert_de_tokens<'de, T>(value: &T, tokens: &'de [Token])
 where
     T: Deserialize<'de> + PartialEq + Debug,
@@ -215,7 +215,7 @@ where
 ///     "unknown field `x`, expected `a` or `b`",
 /// );
 /// ```
-#[cfg_attr(not(no_track_caller), track_caller)]
+#[track_caller]
 pub fn assert_de_tokens_error<'de, T>(tokens: &'de [Token], error: &str)
 where
     T: Deserialize<'de>,
