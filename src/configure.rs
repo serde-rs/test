@@ -122,6 +122,13 @@ where
     {
         T::deserialize(Readable(deserializer)).map(Readable)
     }
+
+    fn deserialize_in_place<D>(deserializer: D, place: &mut Self) -> Result<(), D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        T::deserialize_in_place(Readable(deserializer), &mut place.0)
+    }
 }
 impl<'de, T> Deserialize<'de> for Compact<T>
 where
@@ -132,6 +139,13 @@ where
         D: Deserializer<'de>,
     {
         T::deserialize(Compact(deserializer)).map(Compact)
+    }
+
+    fn deserialize_in_place<D>(deserializer: D, place: &mut Self) -> Result<(), D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        T::deserialize_in_place(Compact(deserializer), &mut place.0)
     }
 }
 
