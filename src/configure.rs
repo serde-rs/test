@@ -614,6 +614,12 @@ macro_rules! impl_deserializer {
             {
                 self.0.visit_i64(v)
             }
+            fn visit_i128<E>(self, v: i128) -> Result<D::Value, E>
+            where
+                E: Error,
+            {
+                self.0.visit_i128(v)
+            }
             fn visit_u8<E>(self, v: u8) -> Result<D::Value, E>
             where
                 E: Error,
@@ -637,6 +643,12 @@ macro_rules! impl_deserializer {
                 E: Error,
             {
                 self.0.visit_u64(v)
+            }
+            fn visit_u128<E>(self, v: u128) -> Result<D::Value, E>
+            where
+                E: Error,
+            {
+                self.0.visit_u128(v)
             }
             fn visit_f32<E>(self, v: f32) -> Result<D::Value, E>
             where
