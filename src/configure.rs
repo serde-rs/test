@@ -355,6 +355,13 @@ macro_rules! impl_serializer {
                         .map(|(key, value)| ($wrapper(key), $wrapper(value))),
                 )
             }
+
+            fn collect_str<T: ?Sized>(self, value: &T) -> Result<Self::Ok, Self::Error>
+            where
+                T: fmt::Display,
+            {
+                self.0.collect_str(value)
+            }
         }
 
         impl<S> SerializeSeq for $wrapper<S>
@@ -467,6 +474,9 @@ macro_rules! impl_serializer {
             {
                 self.0.serialize_field(name, &$wrapper(field))
             }
+            fn skip_field(&mut self, key: &'static str) -> Result<(), Self::Error> {
+                self.0.skip_field(key)
+            }
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
             }
@@ -483,6 +493,9 @@ macro_rules! impl_serializer {
                 T: ?Sized + Serialize,
             {
                 self.0.serialize_field(name, &$wrapper(field))
+            }
+            fn skip_field(&mut self, key: &'static str) -> Result<(), Self::Error> {
+                self.0.skip_field(key)
             }
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
