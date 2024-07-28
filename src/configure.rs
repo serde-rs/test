@@ -413,7 +413,7 @@ macro_rules! impl_serializer {
                 K: ?Sized + Serialize,
                 V: ?Sized + Serialize,
             {
-                self.0.serialize_entry(key, &$wrapper(value))
+                self.0.serialize_entry(&$wrapper(key), &$wrapper(value))
             }
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
