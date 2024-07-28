@@ -794,6 +794,17 @@ macro_rules! impl_deserializer {
             {
                 self.0.visit_enum($wrapper(data))
             }
+
+            fn __private_visit_untagged_option<D2>(
+                self,
+                deserializer: D2,
+            ) -> Result<Self::Value, ()>
+            where
+                D2: Deserializer<'de>,
+            {
+                self.0
+                    .__private_visit_untagged_option($wrapper(deserializer))
+            }
         }
 
         impl<'de, D> SeqAccess<'de> for $wrapper<D>
