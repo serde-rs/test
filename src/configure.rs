@@ -334,6 +334,27 @@ macro_rules! impl_serializer {
                     .serialize_struct_variant(name, variant_index, variant, len)
                     .map($wrapper)
             }
+
+            fn collect_seq<I>(self, iter: I) -> Result<Self::Ok, Self::Error>
+            where
+                I: IntoIterator,
+                <I as IntoIterator>::Item: Serialize,
+            {
+                self.0
+                    .collect_seq(iter.into_iter().map(|item| $wrapper(item)))
+            }
+
+            fn collect_map<K, V, I>(self, iter: I) -> Result<Self::Ok, Self::Error>
+            where
+                K: Serialize,
+                V: Serialize,
+                I: IntoIterator<Item = (K, V)>,
+            {
+                self.0.collect_map(
+                    iter.into_iter()
+                        .map(|(key, value)| ($wrapper(key), $wrapper(value))),
+                )
+            }
         }
 
         impl<S> SerializeSeq for $wrapper<S>
