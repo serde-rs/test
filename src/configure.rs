@@ -359,9 +359,9 @@ macro_rules! impl_serializer {
                 )
             }
 
-            fn collect_str<T: ?Sized>(self, value: &T) -> Result<Self::Ok, Self::Error>
+            fn collect_str<T>(self, value: &T) -> Result<Self::Ok, Self::Error>
             where
-                T: Display,
+                T: ?Sized + Display,
             {
                 self.0.collect_str(value)
             }
