@@ -6,7 +6,7 @@ use serde::ser::{
     Serialize, SerializeMap, SerializeSeq, SerializeStruct, SerializeStructVariant, SerializeTuple,
     SerializeTupleStruct, SerializeTupleVariant, Serializer,
 };
-use std::fmt;
+use std::fmt::{self, Display};
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Readable<T: ?Sized>(T);
@@ -361,7 +361,7 @@ macro_rules! impl_serializer {
 
             fn collect_str<T: ?Sized>(self, value: &T) -> Result<Self::Ok, Self::Error>
             where
-                T: fmt::Display,
+                T: Display,
             {
                 self.0.collect_str(value)
             }
