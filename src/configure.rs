@@ -100,6 +100,7 @@ where
         self.0.serialize(Readable(serializer))
     }
 }
+
 impl<T> Serialize for Compact<T>
 where
     T: ?Sized + Serialize,
@@ -112,6 +113,7 @@ where
         self.0.serialize(Compact(serializer))
     }
 }
+
 impl<'de, T> Deserialize<'de> for Readable<T>
 where
     T: Deserialize<'de>,
@@ -130,6 +132,7 @@ where
         T::deserialize_in_place(Readable(deserializer), &mut place.0)
     }
 }
+
 impl<'de, T> Deserialize<'de> for Compact<T>
 where
     T: Deserialize<'de>,
@@ -162,6 +165,7 @@ where
         self.0.deserialize(Readable(deserializer))
     }
 }
+
 impl<'de, T> DeserializeSeed<'de> for Compact<T>
 where
     T: DeserializeSeed<'de>,
@@ -231,7 +235,6 @@ macro_rules! impl_serializer {
                 serialize_str &str,
                 serialize_bytes &[u8],
                 serialize_unit_struct &'static str
-
             }
 
             fn serialize_unit(self) -> Result<S::Ok, S::Error> {
@@ -370,12 +373,14 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
+
             fn serialize_element<T>(&mut self, value: &T) -> Result<(), S::Error>
             where
                 T: ?Sized + Serialize,
             {
                 self.0.serialize_element(&$wrapper(value))
             }
+
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
             }
@@ -387,12 +392,14 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
+
             fn serialize_element<T>(&mut self, value: &T) -> Result<(), S::Error>
             where
                 T: ?Sized + Serialize,
             {
                 self.0.serialize_element(&$wrapper(value))
             }
+
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
             }
@@ -404,12 +411,14 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
+
             fn serialize_field<T>(&mut self, value: &T) -> Result<(), S::Error>
             where
                 T: ?Sized + Serialize,
             {
                 self.0.serialize_field(&$wrapper(value))
             }
+
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
             }
@@ -421,12 +430,14 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
+
             fn serialize_field<T>(&mut self, value: &T) -> Result<(), S::Error>
             where
                 T: ?Sized + Serialize,
             {
                 self.0.serialize_field(&$wrapper(value))
             }
+
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
             }
@@ -438,18 +449,21 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
+
             fn serialize_key<T>(&mut self, key: &T) -> Result<(), S::Error>
             where
                 T: ?Sized + Serialize,
             {
                 self.0.serialize_key(&$wrapper(key))
             }
+
             fn serialize_value<T>(&mut self, value: &T) -> Result<(), S::Error>
             where
                 T: ?Sized + Serialize,
             {
                 self.0.serialize_value(&$wrapper(value))
             }
+
             fn serialize_entry<K, V>(&mut self, key: &K, value: &V) -> Result<(), S::Error>
             where
                 K: ?Sized + Serialize,
@@ -457,6 +471,7 @@ macro_rules! impl_serializer {
             {
                 self.0.serialize_entry(&$wrapper(key), &$wrapper(value))
             }
+
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
             }
@@ -468,15 +483,18 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
+
             fn serialize_field<T>(&mut self, name: &'static str, field: &T) -> Result<(), S::Error>
             where
                 T: ?Sized + Serialize,
             {
                 self.0.serialize_field(name, &$wrapper(field))
             }
+
             fn skip_field(&mut self, key: &'static str) -> Result<(), Self::Error> {
                 self.0.skip_field(key)
             }
+
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
             }
@@ -488,15 +506,18 @@ macro_rules! impl_serializer {
         {
             type Ok = S::Ok;
             type Error = S::Error;
+
             fn serialize_field<T>(&mut self, name: &'static str, field: &T) -> Result<(), S::Error>
             where
                 T: ?Sized + Serialize,
             {
                 self.0.serialize_field(name, &$wrapper(field))
             }
+
             fn skip_field(&mut self, key: &'static str) -> Result<(), Self::Error> {
                 self.0.skip_field(key)
             }
+
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
             }
@@ -568,6 +589,7 @@ macro_rules! impl_deserializer {
             {
                 self.0.deserialize_unit_struct(name, $wrapper(visitor))
             }
+
             fn deserialize_newtype_struct<V>(
                 self,
                 name: &'static str,
@@ -578,12 +600,14 @@ macro_rules! impl_deserializer {
             {
                 self.0.deserialize_newtype_struct(name, $wrapper(visitor))
             }
+
             fn deserialize_tuple<V>(self, len: usize, visitor: V) -> Result<V::Value, D::Error>
             where
                 V: Visitor<'de>,
             {
                 self.0.deserialize_tuple(len, $wrapper(visitor))
             }
+
             fn deserialize_tuple_struct<V>(
                 self,
                 name: &'static str,
@@ -596,6 +620,7 @@ macro_rules! impl_deserializer {
                 self.0
                     .deserialize_tuple_struct(name, len, $wrapper(visitor))
             }
+
             fn deserialize_struct<V>(
                 self,
                 name: &'static str,
@@ -607,6 +632,7 @@ macro_rules! impl_deserializer {
             {
                 self.0.deserialize_struct(name, fields, $wrapper(visitor))
             }
+
             fn deserialize_enum<V>(
                 self,
                 name: &'static str,
@@ -629,165 +655,193 @@ macro_rules! impl_deserializer {
             D: Visitor<'de>,
         {
             type Value = D::Value;
+
             fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
                 self.0.expecting(formatter)
             }
+
             fn visit_bool<E>(self, v: bool) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_bool(v)
             }
+
             fn visit_i8<E>(self, v: i8) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_i8(v)
             }
+
             fn visit_i16<E>(self, v: i16) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_i16(v)
             }
+
             fn visit_i32<E>(self, v: i32) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_i32(v)
             }
+
             fn visit_i64<E>(self, v: i64) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_i64(v)
             }
+
             fn visit_i128<E>(self, v: i128) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_i128(v)
             }
+
             fn visit_u8<E>(self, v: u8) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_u8(v)
             }
+
             fn visit_u16<E>(self, v: u16) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_u16(v)
             }
+
             fn visit_u32<E>(self, v: u32) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_u32(v)
             }
+
             fn visit_u64<E>(self, v: u64) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_u64(v)
             }
+
             fn visit_u128<E>(self, v: u128) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_u128(v)
             }
+
             fn visit_f32<E>(self, v: f32) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_f32(v)
             }
+
             fn visit_f64<E>(self, v: f64) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_f64(v)
             }
+
             fn visit_char<E>(self, v: char) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_char(v)
             }
+
             fn visit_str<E>(self, v: &str) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_str(v)
             }
+
             fn visit_borrowed_str<E>(self, v: &'de str) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_borrowed_str(v)
             }
+
             fn visit_string<E>(self, v: String) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_string(v)
             }
+
             fn visit_bytes<E>(self, v: &[u8]) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_bytes(v)
             }
+
             fn visit_borrowed_bytes<E>(self, v: &'de [u8]) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_borrowed_bytes(v)
             }
+
             fn visit_byte_buf<E>(self, v: Vec<u8>) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_byte_buf(v)
             }
+
             fn visit_none<E>(self) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_none()
             }
+
             fn visit_some<D2>(self, deserializer: D2) -> Result<Self::Value, D2::Error>
             where
                 D2: Deserializer<'de>,
             {
                 self.0.visit_some($wrapper(deserializer))
             }
+
             fn visit_unit<E>(self) -> Result<D::Value, E>
             where
                 E: Error,
             {
                 self.0.visit_unit()
             }
+
             fn visit_newtype_struct<D2>(self, deserializer: D2) -> Result<Self::Value, D2::Error>
             where
                 D2: Deserializer<'de>,
             {
                 self.0.visit_newtype_struct($wrapper(deserializer))
             }
+
             fn visit_seq<V>(self, seq: V) -> Result<D::Value, V::Error>
             where
                 V: SeqAccess<'de>,
             {
                 self.0.visit_seq($wrapper(seq))
             }
+
             fn visit_map<V>(self, map: V) -> Result<D::Value, V::Error>
             where
                 V: MapAccess<'de>,
             {
                 self.0.visit_map($wrapper(map))
             }
+
             fn visit_enum<V>(self, data: V) -> Result<D::Value, V::Error>
             where
                 V: EnumAccess<'de>,
@@ -801,12 +855,14 @@ macro_rules! impl_deserializer {
             D: SeqAccess<'de>,
         {
             type Error = D::Error;
+
             fn next_element_seed<T>(&mut self, seed: T) -> Result<Option<T::Value>, D::Error>
             where
                 T: DeserializeSeed<'de>,
             {
                 self.0.next_element_seed($wrapper(seed))
             }
+
             fn size_hint(&self) -> Option<usize> {
                 self.0.size_hint()
             }
@@ -817,18 +873,21 @@ macro_rules! impl_deserializer {
             D: MapAccess<'de>,
         {
             type Error = D::Error;
+
             fn next_key_seed<K>(&mut self, seed: K) -> Result<Option<K::Value>, D::Error>
             where
                 K: DeserializeSeed<'de>,
             {
                 self.0.next_key_seed($wrapper(seed))
             }
+
             fn next_value_seed<V>(&mut self, seed: V) -> Result<V::Value, D::Error>
             where
                 V: DeserializeSeed<'de>,
             {
                 self.0.next_value_seed($wrapper(seed))
             }
+
             fn next_entry_seed<K, V>(
                 &mut self,
                 kseed: K,
@@ -840,6 +899,7 @@ macro_rules! impl_deserializer {
             {
                 self.0.next_entry_seed($wrapper(kseed), $wrapper(vseed))
             }
+
             fn size_hint(&self) -> Option<usize> {
                 self.0.size_hint()
             }
@@ -851,6 +911,7 @@ macro_rules! impl_deserializer {
         {
             type Error = D::Error;
             type Variant = $wrapper<D::Variant>;
+
             fn variant_seed<V>(self, seed: V) -> Result<(V::Value, Self::Variant), Self::Error>
             where
                 V: DeserializeSeed<'de>,
@@ -866,21 +927,25 @@ macro_rules! impl_deserializer {
             D: VariantAccess<'de>,
         {
             type Error = D::Error;
+
             fn unit_variant(self) -> Result<(), D::Error> {
                 self.0.unit_variant()
             }
+
             fn newtype_variant_seed<T>(self, seed: T) -> Result<T::Value, D::Error>
             where
                 T: DeserializeSeed<'de>,
             {
                 self.0.newtype_variant_seed($wrapper(seed))
             }
+
             fn tuple_variant<V>(self, len: usize, visitor: V) -> Result<V::Value, D::Error>
             where
                 V: Visitor<'de>,
             {
                 self.0.tuple_variant(len, $wrapper(visitor))
             }
+
             fn struct_variant<V>(
                 self,
                 fields: &'static [&'static str],
