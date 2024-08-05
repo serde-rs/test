@@ -1,6 +1,6 @@
 [package]
 name = "serde_test"
-version = "1.0.176"
+version = "1.0.177"
 authors = ["Erick Tryzelaar <erick.tryzelaar@gmail.com>", "David Tolnay <dtolnay@gmail.com>"]
 categories = ["development-tools::testing"]
 description = "Token De/Serializer for testing De/Serialize implementations"
