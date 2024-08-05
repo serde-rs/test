@@ -122,6 +122,13 @@ where
     {
         T::deserialize(Readable(deserializer)).map(Readable)
     }
+
+    fn deserialize_in_place<D>(deserializer: D, place: &mut Self) -> Result<(), D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        T::deserialize_in_place(Readable(deserializer), &mut place.0)
+    }
 }
 impl<'de, T> Deserialize<'de> for Compact<T>
 where
@@ -132,6 +139,13 @@ where
         D: Deserializer<'de>,
     {
         T::deserialize(Compact(deserializer)).map(Compact)
+    }
+
+    fn deserialize_in_place<D>(deserializer: D, place: &mut Self) -> Result<(), D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        T::deserialize_in_place(Compact(deserializer), &mut place.0)
     }
 }
 
@@ -205,10 +219,12 @@ macro_rules! impl_serializer {
                 serialize_i16 i16,
                 serialize_i32 i32,
                 serialize_i64 i64,
+                serialize_i128 i128,
                 serialize_u8 u8,
                 serialize_u16 u16,
                 serialize_u32 u32,
                 serialize_u64 u64,
+                serialize_u128 u128,
                 serialize_f32 f32,
                 serialize_f64 f64,
                 serialize_char char,
@@ -318,6 +334,34 @@ macro_rules! impl_serializer {
                     .serialize_struct_variant(name, variant_index, variant, len)
                     .map($wrapper)
             }
+
+            fn collect_seq<I>(self, iter: I) -> Result<Self::Ok, Self::Error>
+            where
+                I: IntoIterator,
+                <I as IntoIterator>::Item: Serialize,
+            {
+                self.0
+                    .collect_seq(iter.into_iter().map(|item| $wrapper(item)))
+            }
+
+            fn collect_map<K, V, I>(self, iter: I) -> Result<Self::Ok, Self::Error>
+            where
+                K: Serialize,
+                V: Serialize,
+                I: IntoIterator<Item = (K, V)>,
+            {
+                self.0.collect_map(
+                    iter.into_iter()
+                        .map(|(key, value)| ($wrapper(key), $wrapper(value))),
+                )
+            }
+
+            fn collect_str<T: ?Sized>(self, value: &T) -> Result<Self::Ok, Self::Error>
+            where
+                T: fmt::Display,
+            {
+                self.0.collect_str(value)
+            }
         }
 
         impl<S> SerializeSeq for $wrapper<S>
@@ -411,7 +455,7 @@ macro_rules! impl_serializer {
                 K: ?Sized + Serialize,
                 V: ?Sized + Serialize,
             {
-                self.0.serialize_entry(key, &$wrapper(value))
+                self.0.serialize_entry(&$wrapper(key), &$wrapper(value))
             }
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
@@ -430,6 +474,9 @@ macro_rules! impl_serializer {
             {
                 self.0.serialize_field(name, &$wrapper(field))
             }
+            fn skip_field(&mut self, key: &'static str) -> Result<(), Self::Error> {
+                self.0.skip_field(key)
+            }
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
             }
@@ -446,6 +493,9 @@ macro_rules! impl_serializer {
                 T: ?Sized + Serialize,
             {
                 self.0.serialize_field(name, &$wrapper(field))
+            }
+            fn skip_field(&mut self, key: &'static str) -> Result<(), Self::Error> {
+                self.0.skip_field(key)
             }
             fn end(self) -> Result<S::Ok, S::Error> {
                 self.0.end()
@@ -486,10 +536,12 @@ macro_rules! impl_deserializer {
                     deserialize_u16,
                     deserialize_u32,
                     deserialize_u64,
+                    deserialize_u128,
                     deserialize_i8,
                     deserialize_i16,
                     deserialize_i32,
                     deserialize_i64,
+                    deserialize_i128,
                     deserialize_f32,
                     deserialize_f64,
                     deserialize_char,
@@ -610,6 +662,12 @@ macro_rules! impl_deserializer {
             {
                 self.0.visit_i64(v)
             }
+            fn visit_i128<E>(self, v: i128) -> Result<D::Value, E>
+            where
+                E: Error,
+            {
+                self.0.visit_i128(v)
+            }
             fn visit_u8<E>(self, v: u8) -> Result<D::Value, E>
             where
                 E: Error,
@@ -633,6 +691,12 @@ macro_rules! impl_deserializer {
                 E: Error,
             {
                 self.0.visit_u64(v)
+            }
+            fn visit_u128<E>(self, v: u128) -> Result<D::Value, E>
+            where
+                E: Error,
+            {
+                self.0.visit_u128(v)
             }
             fn visit_f32<E>(self, v: f32) -> Result<D::Value, E>
             where
