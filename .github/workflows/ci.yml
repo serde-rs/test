@@ -28,6 +28,11 @@ jobs:
           toolchain: ${{matrix.rust}}
       - run: cargo build
       - run: cargo test --features serde/derive,serde/rc
+      - uses: actions/upload-artifact@v4
+        if: matrix.rust == 'nightly' && always()
+        with:
+          name: Cargo.lock
+          path: Cargo.lock
 
   minimal:
     name: Minimal versions
