@@ -316,7 +316,7 @@ pub struct Variant<'s, 'a: 's> {
     end: Token,
 }
 
-impl<'s, 'a> ser::SerializeSeq for &'s mut Serializer<'a> {
+impl<'a> ser::SerializeSeq for &mut Serializer<'a> {
     type Ok = ();
     type Error = Error;
 
@@ -333,7 +333,7 @@ impl<'s, 'a> ser::SerializeSeq for &'s mut Serializer<'a> {
     }
 }
 
-impl<'s, 'a> ser::SerializeTuple for &'s mut Serializer<'a> {
+impl<'a> ser::SerializeTuple for &mut Serializer<'a> {
     type Ok = ();
     type Error = Error;
 
@@ -350,7 +350,7 @@ impl<'s, 'a> ser::SerializeTuple for &'s mut Serializer<'a> {
     }
 }
 
-impl<'s, 'a> ser::SerializeTupleStruct for &'s mut Serializer<'a> {
+impl<'a> ser::SerializeTupleStruct for &mut Serializer<'a> {
     type Ok = ();
     type Error = Error;
 
@@ -388,7 +388,7 @@ impl<'s, 'a> ser::SerializeTupleVariant for Variant<'s, 'a> {
     }
 }
 
-impl<'s, 'a> ser::SerializeMap for &'s mut Serializer<'a> {
+impl<'a> ser::SerializeMap for &mut Serializer<'a> {
     type Ok = ();
     type Error = Error;
 
@@ -412,7 +412,7 @@ impl<'s, 'a> ser::SerializeMap for &'s mut Serializer<'a> {
     }
 }
 
-impl<'s, 'a> ser::SerializeStruct for &'s mut Serializer<'a> {
+impl<'a> ser::SerializeStruct for &mut Serializer<'a> {
     type Ok = ();
     type Error = Error;
 
