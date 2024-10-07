@@ -146,7 +146,11 @@
 
 #![doc(html_root_url = "https://docs.rs/serde_test/1.0.177")]
 // Ignored clippy lints
-#![allow(clippy::float_cmp, clippy::needless_doctest_main)]
+#![allow(
+    clippy::float_cmp,
+    clippy::needless_doctest_main,
+    clippy::needless_lifetimes
+)]
 // Ignored clippy_pedantic lints
 #![allow(
     clippy::manual_assert,
