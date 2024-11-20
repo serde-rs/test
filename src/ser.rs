@@ -1,5 +1,7 @@
 use crate::error::Error;
 use crate::token::Token;
+use alloc::format;
+use alloc::string::String;
 use serde::ser::{self, Serialize};
 
 /// A `Serializer` that ensures that a value serializes to a given list of
@@ -45,7 +47,7 @@ macro_rules! assert_next_token {
     ($ser:expr, $actual:ident { $($k:ident),* }) => {{
         let compare = ($($k,)*);
         let field_format = || {
-            use std::fmt::Write;
+            use core::fmt::Write;
             let mut buffer = String::new();
             $(
                 write!(&mut buffer, concat!(stringify!($k), ": {:?}, "), $k).unwrap();

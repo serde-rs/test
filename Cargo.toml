@@ -11,11 +11,15 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/serde-rs/test"
 rust-version = "1.56"
 
+[features]
+default = ["std"]
+std = ["serde/std"]
+
 [dependencies]
-serde = "1.0.69"
+serde = { version = "1.0.70", default-features = false, features = ["alloc"] }
 
 [dev-dependencies]
-serde = { version = "1", features = ["rc"] }
+serde = { version = "1", default-features = false, features = ["rc"] }
 serde_derive = "1"
 
 [lib]

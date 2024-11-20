@@ -1,6 +1,8 @@
+use alloc::string::{String, ToString};
+use core::fmt::{self, Display};
 use serde::{de, ser};
+#[cfg(feature = "std")]
 use std::error;
-use std::fmt::{self, Display};
 
 #[derive(Clone, Debug)]
 pub struct Error {
@@ -29,6 +31,7 @@ impl fmt::Display for Error {
     }
 }
 
+#[cfg(feature = "std")]
 impl error::Error for Error {
     fn description(&self) -> &str {
         &self.msg

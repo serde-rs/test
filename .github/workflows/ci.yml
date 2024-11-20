@@ -20,14 +20,15 @@ jobs:
       fail-fast: false
       matrix:
         rust: [stable, beta, nightly, 1.56.0]
+        features: [--no-default-features, ""]
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{matrix.rust}}
-      - run: cargo build
-      - run: cargo test --features serde/derive,serde/rc
+      - run: cargo build ${{matrix.features}}
+      - run: cargo test ${{matrix.features}} --features serde/derive,serde/rc
       - uses: actions/upload-artifact@v4
         if: matrix.rust == 'nightly' && always()
         with:
@@ -38,12 +39,16 @@ jobs:
   minimal:
     name: Minimal versions
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        features: [--no-default-features, ""]
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@nightly
       - run: cargo generate-lockfile -Z minimal-versions
-      - run: cargo check --locked
+      - run: cargo check --locked ${{matrix.features}}
 
   doc:
     name: Documentation
@@ -61,11 +66,15 @@ jobs:
     name: Clippy
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
+    strategy:
+      fail-fast: false
+      matrix:
+        features: [--no-default-features, ""]
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@clippy
-      - run: cargo clippy -- -Dclippy::all -Dclippy::pedantic
+      - run: cargo clippy ${{matrix.features}} -- -Dclippy::all -Dclippy::pedantic
 
   outdated:
     name: Outdated

@@ -1,8 +1,8 @@
 use crate::de::Deserializer;
 use crate::ser::Serializer;
 use crate::token::Token;
+use core::fmt::Debug;
 use serde::{Deserialize, Serialize};
-use std::fmt::Debug;
 
 /// Runs both `assert_ser_tokens` and `assert_de_tokens`.
 ///
@@ -83,6 +83,10 @@ where
 /// `error`.
 ///
 /// ```
+/// # #[cfg(not(feature = "std"))]
+/// # fn main() {}
+/// # #[cfg(feature = "std")]
+/// # fn main() {
 /// use serde_derive::Serialize;
 /// use serde_test::{assert_ser_tokens_error, Token};
 /// use std::sync::{Arc, Mutex};
@@ -120,6 +124,8 @@ where
 ///     let error = "lock poison error while serializing";
 ///     assert_ser_tokens_error(&example, expected, error);
 /// }
+/// # main();
+/// # }
 /// ```
 #[track_caller]
 pub fn assert_ser_tokens_error<T>(value: &T, tokens: &[Token], error: &str)

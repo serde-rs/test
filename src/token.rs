@@ -1,4 +1,4 @@
-use std::fmt::{self, Debug, Display};
+use core::fmt::{self, Debug, Display};
 
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub enum Token {
