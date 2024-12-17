@@ -5,6 +5,8 @@
 [Latest Version]: https://img.shields.io/crates/v/serde_test.svg
 [crates.io]: https://crates.io/crates/serde\_test
 
+_(This project is no longer maintained.)_
+
 This crate provides a convenient concise way to write unit tests for
 implementations of [`Serialize`] and [`Deserialize`].
 
