@@ -158,6 +158,9 @@
     clippy::module_name_repetitions,
     clippy::too_many_lines
 )]
+#![cfg_attr(not(feature = "std"), no_std)]
+
+extern crate alloc;
 
 mod assert;
 mod configure;

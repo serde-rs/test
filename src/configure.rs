@@ -1,3 +1,6 @@
+use alloc::string::String;
+use alloc::vec::Vec;
+use core::fmt::{self, Display};
 use serde::de::{
     Deserialize, DeserializeSeed, Deserializer, EnumAccess, Error, MapAccess, SeqAccess,
     VariantAccess, Visitor,
@@ -6,7 +9,6 @@ use serde::ser::{
     Serialize, SerializeMap, SerializeSeq, SerializeStruct, SerializeStructVariant, SerializeTuple,
     SerializeTupleStruct, SerializeTupleVariant, Serializer,
 };
-use std::fmt::{self, Display};
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Readable<T: ?Sized>(T);
